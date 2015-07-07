@@ -13,6 +13,9 @@ function init() {
     {
         dropDown.append('<option value=' + key + '>' + value + '</option>');
     });
+
+
+
 }
 
 function startScan() {
@@ -33,6 +36,8 @@ function startScan() {
             $.post(config.urls.getUrl, collectPostData())
                 .done(function (data) {
                     $("#results").append("<br/>" + data);
+
+                    $("#sendPost").attr( "disabled", false );
                 })
                 .fail(function () {
                     $("#results").append("<br/>" + 'Hiba küldés közbe');
@@ -52,6 +57,8 @@ function sendPost() {
     $.post(config.urls.postUrl, collectPostData())
         .done(function (data) {
             $("#postResults").html(data);
+
+            $("#sendPost").attr( "disabled", true );
         })
         .fail(function () {
             $("#postResults").html('Hiba bejelentkezés közbe');
@@ -62,7 +69,7 @@ function sendPost() {
 function collectPostData(){
     var postData = {};
     postData.helyszin = $("#location_selection option:selected").text();
-    postData.authorizationCode = "random";
+    postData.authorizationCode = config.appkey_note;
     postData.barcode = $('body').data('actualBarcode');
 
     return postData;
