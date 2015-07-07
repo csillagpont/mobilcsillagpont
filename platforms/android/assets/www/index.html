@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <link rel="stylesheet" type="text/css" href="css/jquery.mobile.css" />
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <!-- Since jQuery Mobile relies on jQuery core's $.ajax() functionality,
+        $.support.cors & $.mobile.allowCrossDomainPages must be set to true to tell
+        $.ajax to load cross-domain pages. -->
+        <script type="text/javascript">
+            $(document).bind("mobileinit", function() {
+                $.support.cors = true;
+                $.mobile.allowCrossDomainPages = true;
+            });
+        </script>
+
+        <style>
+            #logo
+            {
+                height:200px;
+                width:300px;
+                padding-bottom:30px;
+            }
+            #logo img
+            {
+                max-width:100%;
+                max-height:100%;
+                margin:auto;
+                position: absolute;
+                max-width: 100%;
+                width: auto;
+
+
+            }
+        </style>
+
+        <script type="text/javascript" src="js/config.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile.js"></script>
+
+
+    </head>
+
+    <body data-actualBarcode="" >
+    <div id="logo"><img src="img/csillaglogo1.jpg" display="inline"/></div>
+    <p>
+
+    <button id="startScan" type="button" style="padding-top:30px;padding-bottom:30px">Kártya beolvasása</button>
+    </p>
+
+    <p><b>Felhasználó adatai:</b></p>
+    <div id="results"></div>
+    <p></p>
+
+    <hr>
+
+    <div id="location">
+    <form>
+        <div class="ui-field-location">
+            <legend><b>Helyszín választás :</b></legend>
+            <select name="location_selection" id="location_selection">
+                      <option>helyszinek...</option>
+            </select>
+        </fieldset>
+        </div>
+    </form>
+    </div>
+    <p></p>
+    <hr>
+    <button id="sendPost" type="button" style="padding-top:30px;padding-bottom:30px">Beléptetés</button>
+    <p><b>Beléptetés eredménye: </b></p>
+    <div id="postResults"></div>
+
+        <script type="text/javascript" src="cordova.js"></script>
+
+    </body>
+</html>
