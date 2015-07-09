@@ -2,21 +2,50 @@ var resultDiv;
 
 document.addEventListener("deviceready", init, false);
 function init() {
-    document.querySelector("#startScan").addEventListener("touchend", startScan, false);
-    document.querySelector("#sendPost").addEventListener("touchend", sendPost, false);
+
+    $('#registratorScan').click(regScan);
+    $('#startScan').click(startScan);
+    $('#sendPost').click(sendRegistration);
 
     // init options
     var dropDown = $('#location_selection');
     dropDown.find('option').remove();
 
-    $.each(config.locations,function(key, value)
-    {
+    $.each(config.locations, function (key, value) {
         dropDown.append('<option value=' + key + '>' + value + '</option>');
     });
 
 
+}
+
+
+function regScan() {
+
+    $("#registratorResult").html("");
+
+    cordova.plugins.barcodeScanner.scan(
+        function (result) {
+
+            if (result.cancelled)
+            {
+                $("#registratorResult").append("<br/>" + 'Kártyabeolvasás megszakítva');
+                return;
+            }
+
+            var s = "kártyaszám: " + result.text + "<br/>";
+            $("#registratorResult").html(s);
+            $('body').data('registratorBarcode', result.text);
+            $("#userRegistration").show();
+            $("#logon").hide();
+        },
+        function (error) {
+            $("#registratorResult").append("<br/>" + 'Hiba scannelés közbe');
+        }
+    );
 
 }
+
+
 
 function startScan() {
 
@@ -24,20 +53,29 @@ function startScan() {
 
     cordova.plugins.barcodeScanner.scan(
         function (result) {
-            var s = "barcode: " + result.text + "<br/>" +
-                "formátum: " + result.format + "<br/>" +
-                "megszakítva: " + result.cancelled;
+
+            if (result.cancelled)
+            {
+                $("#results").append("<br/>" + 'Kártyabeolvasás megszakítva');
+                return true;
+            }
+
+            var s = "kártyaszám: " + result.text + "<br/>" +
+                "formátum: " + result.format + "<br/>";
 
             $("#results").html(s);
 
             $('body').data('actualBarcode', result.text);
 
 
-            $.post(config.urls.getUrl, collectPostData())
+            $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_query, ssz: $('body').data('actualBarcode'), imei: device.uuid })
                 .done(function (data) {
-                    $("#results").append("<br/>" + data);
 
-                    $("#sendPost").attr( "disabled", false );
+                    $("#results").append("<br/><span id='resultSpan'>" + data + "</span>");
+
+                    if (data.trim().startsWith("YES")) {
+                        $("#sendPost").attr("disabled", false);
+                    }
                 })
                 .fail(function () {
                     $("#results").append("<br/>" + 'Hiba küldés közbe');
@@ -52,24 +90,23 @@ function startScan() {
 
 }
 
-function sendPost() {
+function sendRegistration() {
 
-    $.post(config.urls.postUrl, collectPostData())
+    $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_note, ssz: $('body').data('actualBarcode'), imei: device.uuid })
         .done(function (data) {
             $("#postResults").html(data);
 
-            $("#sendPost").attr( "disabled", true );
+            $("#sendPost").attr("disabled", true);
         })
         .fail(function () {
             $("#postResults").html('Hiba bejelentkezés közbe');
         });
-
 }
 
-function collectPostData(){
+function collectPostData() {
     var postData = {};
     postData.helyszin = $("#location_selection option:selected").text();
-    postData.authorizationCode = config.appkey_note;
+    postData.ssz = config.appkey_note;
     postData.barcode = $('body').data('actualBarcode');
 
     return postData;

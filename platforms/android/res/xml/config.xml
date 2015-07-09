@@ -8,6 +8,9 @@
     <feature name="BarcodeScanner">
         <param name="android-package" value="com.phonegap.plugins.barcodescanner.BarcodeScanner" />
     </feature>
+    <feature name="Device">
+        <param name="android-package" value="org.apache.cordova.device.Device" />
+    </feature>
     <allow-intent href="market:*" />
     <preference name="android-targetSdkVersion" value="19" />
     <preference name="android-minSdkVersion" value="10" />
