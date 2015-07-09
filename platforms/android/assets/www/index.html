@@ -21,28 +21,6 @@
         });
     </script>
 
-    <style>
-        #logo {
-            height: 200px;
-            width: 300px;
-            padding-bottom: 30px;
-        }
-
-        #logo img {
-            max-width: 100%;
-            max-height: 100%;
-            margin: auto;
-            position: absolute;
-            max-width: 100%;
-            width: auto;
-
-        }
-
-        #resultSpan {
-            color: red
-        }
-    </style>
-
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/config.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
@@ -50,46 +28,52 @@
 
     <title>MobilCsillagpont</title>
 </head>
-<h1 align="center">Csillagpont beléptetés 2015</h1>
+
 <body data-actualBarcode="" data-registratorBarcode="">
+<div id="header">
+    <img src="img/logo.png"/>
+</div>
+
 <div id="logon">
 
-    <button id="registratorScan" type="button" style="padding-top:20px;padding-bottom:20px">Regisztrátor kártya beolvasása</button>
+    <button id="registratorScan" type="button" style="padding-top:20px;padding-bottom:20px">Regisztrátor kártya
+        beolvasása
+    </button>
     <div id="registratorResult"></div>
 </div>
 
 <div id="userRegistration" style="display:none;">
     <p>
-        <button id="startScan" type="button" style="padding-top:20px;padding-bottom:20px">Belépőkártya beolvasása</button>
+        <button id="startScan" type="button">Új belépőkártya beolvasása
+        </button>
     </p>
 
-    <p><b>Felhasználó adatai:</b></p>
+    <div id="afterScan" style="display:none;">
+        <h3 class="ui-bar ui-bar-a ui-corner-all">Felhasználó adatai:</h3>
 
-    <div id="results"></div>
-    <p></p>
+        <div class="ui-body" id="results"></div>
+        <p></p>
 
-    <hr>
+        <hr>
 
-    <div id="location">
-        <form>
-            <div class="ui-field-location">
-                <b>Helyszín választás :</b>
-                <select name="location_selection" id="location_selection" style="padding-top:30px;padding-bottom:30px">
-                    <option>csarnok</option>
-                </select>
+        <div id="location">
+            <form>
+                <div class="ui-field-location">
+                    <h3 class="ui-bar ui-bar-a ui-corner-all">Helyszín választás</h3>
+                    <select name="location_selection" id="location_selection">
+                        <option>Válassz!</option>
+                    </select>
 
-            </div>
-        </form>
+                </div>
+            </form>
+        </div>
+        <p></p>
+        <hr>
+        <button id="sendPost" type="button" disabled>Beléptetés</button>
+        <h3 class="ui-bar ui-bar-a ui-corner-all">Beléptetés eredménye: </h3>
+
+        <div class="ui-body" id="postResults"></div>
     </div>
-    <p></p>
-    <hr>
-
-
-    <button id="sendPost" type="button" style="padding-top:20px;padding-bottom:20px" disabled>Beléptetés</button>
-    <p><b>Beléptetés eredménye: </b></p>
-
-    <div id="postResults"></div>
-
 </div>
 </body>
 </html>

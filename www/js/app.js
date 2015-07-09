@@ -1,5 +1,3 @@
-var resultDiv;
-
 document.addEventListener("deviceready", init, false);
 function init() {
 
@@ -9,15 +7,11 @@ function init() {
 
     // init options
     var dropDown = $('#location_selection');
-    dropDown.find('option').remove();
-
     $.each(config.locations, function (key, value) {
-        dropDown.append('<option value=' + key + '>' + value + '</option>');
+        dropDown.prepend('<option value=' + key + '>' + value + '</option>');
     });
 
-
 }
-
 
 function regScan() {
 
@@ -57,7 +51,7 @@ function startScan() {
             if (result.cancelled)
             {
                 $("#results").append("<br/>" + 'Kártyabeolvasás megszakítva');
-                return true;
+                return;
             }
 
             var s = "kártyaszám: " + result.text + "<br/>" +
@@ -67,6 +61,7 @@ function startScan() {
 
             $('body').data('actualBarcode', result.text);
 
+            $("#afterScan").show();
 
             $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_query, ssz: $('body').data('actualBarcode'), imei: device.uuid })
                 .done(function (data) {
@@ -92,6 +87,11 @@ function startScan() {
 
 function sendRegistration() {
 
+    if ($("#location_selection option:selected").text() === 'Válassz!') {
+        $("#postResults").append("<br/>" + 'Kérlek válassz helyszint!');
+        return;
+    }
+
     $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_note, ssz: $('body').data('actualBarcode'), imei: device.uuid })
         .done(function (data) {
             $("#postResults").html(data);
@@ -103,11 +103,3 @@ function sendRegistration() {
         });
 }
 
-function collectPostData() {
-    var postData = {};
-    postData.helyszin = $("#location_selection option:selected").text();
-    postData.ssz = config.appkey_note;
-    postData.barcode = $('body').data('actualBarcode');
-
-    return postData;
-}
