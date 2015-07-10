@@ -4,6 +4,7 @@ function init() {
     $('#registratorScan').click(regScan);
     $('#startScan').click(startScan);
     $('#sendPost').click(sendRegistration);
+    $('#regSwitch').click(regSwitch);
 
     // init options
     var dropDown = $('#location_selection');
@@ -42,14 +43,22 @@ function regScan() {
 function startScan() {
 
     $("#postResults").html("");
+    $("#locationMsg").hide();
 
+    if ($("#location_selection option:selected").text() === 'Válassz!') {
+        $("#locationMsg").show();
+        return;
+    }
     cordova.plugins.barcodeScanner.scan(
         function (result) {
+
+            $("#sendPost").prop("disabled", true);
 
             if (result.cancelled) {
                 $("#results").append("<br/>" + 'Kártyabeolvasás megszakítva');
                 return;
             }
+
 
             var s = "kártyaszám: " + result.text + "<br/>" +
                 "formátum: " + result.format + "<br/>";
@@ -60,13 +69,13 @@ function startScan() {
 
             $("#afterScan").show();
 
-            $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_query, ssz: $('body').data('actualBarcode'), imei: device.uuid })
+            $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_query, ssz: $('body').data('actualBarcode'), imei: device.uuid, reg_ssz: $('body').data('registratorBarcode')})
                 .done(function (data) {
 
                     $("#results").append("<br/><span id='resultSpan'>" + data + "</span>");
 
-                    if (data.trim().startsWith("YES")) {
-                        $("#sendPost").attr("disabled", false);
+                    if (data.trim().indexOf("YES") == 0) {
+                        $("#sendPost").prop("disabled", false);
                     }
                 })
                 .fail(function () {
@@ -77,26 +86,36 @@ function startScan() {
         },
         function (error) {
             $("#results").append("<br/>" + 'Hiba scannelés közbe');
+            $("#sendPost").prop("disabled", true);
         }
     );
 
 }
 
 function sendRegistration() {
-
+    ("#locationMsg").hide();
     if ($("#location_selection option:selected").text() === 'Válassz!') {
-        $("#postResults").append("<br/>" + 'Kérlek válassz helyszint!');
+        $("#locationMsg").show();
         return;
     }
 
-    $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_note, ssz: $('body').data('actualBarcode'), imei: device.uuid })
+    $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_note, ssz: $('body').data('actualBarcode'), imei: device.uuid, reg_ssz: $('body').data('registratorBarcode')})
         .done(function (data) {
             $("#postResults").html(data);
 
-            $("#sendPost").attr("disabled", true);
+            $("#sendPost").prop("disabled", true);
         })
         .fail(function () {
             $("#postResults").html('Hiba bejelentkezés közbe');
         });
+}
+
+
+function regSwitch() {
+    $("#userRegistration").hide();
+    $("#logon").show();
+    $("#registratorResult").html("");
+    $("#results").html("");
+    $("#postResults").html("");
 }
 

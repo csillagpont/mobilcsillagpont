@@ -36,17 +36,36 @@
 
 <div id="logon">
 
-    <button id="registratorScan" type="button" style="padding-top:20px;padding-bottom:20px">Regisztrátor kártya
+    <button id="registratorScan" type="button">Regisztrátor kártya
         beolvasása
     </button>
     <div id="registratorResult"></div>
 </div>
 
 <div id="userRegistration" style="display:none;">
+
     <p>
         <button id="startScan" type="button">Új belépőkártya beolvasása
         </button>
     </p>
+
+    <div id="location">
+        <form>
+            <div class="ui-field-location">
+                <h3 class="ui-bar ui-bar-a ui-corner-all">Helyszín választás</h3>
+                <select name="location_selection" id="location_selection">
+                    <option>Válassz!</option>
+                </select>
+
+            </div>
+        </form>
+
+        <div id="locationMsg" style="display:none;" class="ui-body">
+            Kérlek válassz helyszint!
+        </div>
+
+    </div>
+
 
     <div id="afterScan" style="display:none;">
         <h3 class="ui-bar ui-bar-a ui-corner-all">Felhasználó adatai:</h3>
@@ -56,23 +75,17 @@
 
         <hr>
 
-        <div id="location">
-            <form>
-                <div class="ui-field-location">
-                    <h3 class="ui-bar ui-bar-a ui-corner-all">Helyszín választás</h3>
-                    <select name="location_selection" id="location_selection">
-                        <option>Válassz!</option>
-                    </select>
 
-                </div>
-            </form>
-        </div>
         <p></p>
         <hr>
-        <button id="sendPost" type="button" disabled>Beléptetés</button>
-        <h3 class="ui-bar ui-bar-a ui-corner-all">Beléptetés eredménye: </h3>
-
+        <div id="regDiv">
+            <button id="sendPost" type="button" disabled>Beléptetés</button>
+            <h3 class="ui-bar ui-bar-a ui-corner-all">Beléptetés eredménye: </h3>
+        </div>
         <div class="ui-body" id="postResults"></div>
+    </div>
+    <div id="regSwitchDiv">
+        <a id="regSwitch" class="ui-btn ui-btn-inline ui-icon-user ui-btn-icon-right">Felhasználó váltás</a>
     </div>
 </div>
 </body>
