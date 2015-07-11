@@ -16,7 +16,11 @@ button, select {
     padding-bottom: 30px;
 }
 
-#resultSpan, #postResults, #locationMsg {
+.success {
+    color: green
+}
+
+.error {
     color: red
 }
 

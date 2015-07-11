@@ -74,8 +74,11 @@ function startScan() {
 
                     $("#results").append("<br/><span id='resultSpan'>" + data + "</span>");
 
-                    if (data.trim().indexOf("YES") == 0) {
+                    if (data.trim().indexOf("YES,1,0") == 0) {
                         $("#sendPost").prop("disabled", false);
+                        $("#results").append("<br/> <span class='success'>BELÉPHET</span>");
+                    } else {
+                        $("#results").append("<br/>  <span class='error'> NEM LÉPHET BE </span>");
                     }
                 })
                 .fail(function () {
@@ -93,7 +96,7 @@ function startScan() {
 }
 
 function sendRegistration() {
-    ("#locationMsg").hide();
+    $("#locationMsg").hide();
     if ($("#location_selection option:selected").text() === 'Válassz!') {
         $("#locationMsg").show();
         return;
@@ -102,6 +105,12 @@ function sendRegistration() {
     $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_note, ssz: $('body').data('actualBarcode'), imei: device.uuid, reg_ssz: $('body').data('registratorBarcode')})
         .done(function (data) {
             $("#postResults").html(data);
+
+            if (data.trim().indexOf("YES,1,1") == 0) {
+                $("#postResults").append("<br/>  <span class='success'> SIKERES BELÉPTETÉS</span>")
+            } else {
+                $("#postResults").append("<br/> <span class='error'> SIKERTELEN BELÉPTETÉS </span>")
+            }
 
             $("#sendPost").prop("disabled", true);
         })
