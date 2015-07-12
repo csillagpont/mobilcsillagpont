@@ -72,9 +72,18 @@ function startScan() {
             $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_query, ssz: $('body').data('actualBarcode'), imei: device.uuid, reg_ssz: $('body').data('registratorBarcode')})
                 .done(function (data) {
 
-                    $("#results").append("<br/><span id='resultSpan'>" + data + "</span>");
+                    var dataArray = data.split(',');
+                    $("#results").append("<br/><span class='resultSpan'>");
 
-                    if (data.trim().indexOf("YES,1,0") == 0) {
+                    $("#results").append("Kimenet: " + dataArray[0] + "  ");
+                    $("#results").append("Befizetett: " + dataArray[1] + "  ");
+                    $("#results").append("Számláló: " + dataArray[2] + " ");
+                    $("#results").append("Név: " + (dataArray[3] || "N/A" ) + "  ");
+                    $("#results").append("Egyéb: " + (dataArray[4] || "N/A") + "  ");
+
+                    $("#results").append("</span>");
+
+                    if (data.trim().indexOf("YES,1") == 0) {
                         $("#sendPost").prop("disabled", false);
                         $("#results").append("<br/> <span class='success'>BELÉPHET</span>");
                     } else {
@@ -104,12 +113,25 @@ function sendRegistration() {
 
     $.get(config.urls.getUrl, { helyszin: $("#location_selection option:selected").text(), appkey: config.appkey_note, ssz: $('body').data('actualBarcode'), imei: device.uuid, reg_ssz: $('body').data('registratorBarcode')})
         .done(function (data) {
-            $("#postResults").html(data);
 
-            if (data.trim().indexOf("YES,1,1") == 0) {
-                $("#postResults").append("<br/>  <span class='success'> SIKERES BELÉPTETÉS</span>")
-            } else {
+
+            var dataArray = data.split(',');
+            $("#postResults").append("<br/><span class='resultSpan'>");
+
+            $("#postResults").append("Kimenet: " + dataArray[0] + "  ");
+            $("#postResults").append("Befizetett: " + dataArray[1] + "  ");
+            $("#postResults").append("Számláló: " + dataArray[2] + " ");
+            $("#postResults").append("Név: " + (dataArray[3] || "N/A" ) + "  ");
+            $("#postResults").append("Egyéb: " + (dataArray[4] || "N/A") + "  ");
+
+            $("#postResults").append("</span>");
+
+            if (data.trim().indexOf("NOK") == 0) {
                 $("#postResults").append("<br/> <span class='error'> SIKERTELEN BELÉPTETÉS </span>")
+            } else if (data.trim().indexOf(",1,") != -1) {
+                $("#postResults").append("<br/>  <span class='success'> SIKERES BELÉPTETÉS</span>");
+            } else {
+                $("#postResults").append("<br/>  <span class='error'> NEM VÁRT HIBA</span>");
             }
 
             $("#sendPost").prop("disabled", true);
@@ -126,5 +148,6 @@ function regSwitch() {
     $("#registratorResult").html("");
     $("#results").html("");
     $("#postResults").html("");
+    $("#sendPost").prop("disabled", true);
 }
 
